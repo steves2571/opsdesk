@@ -49,9 +49,14 @@ export default function IncidentsPage() {
 
     return (
         <div className="min-h-screen bg-gray-900 text-white">
-            <header className="bg-gray-800 border-b border-gray-700 px-6 py-4">
-                <h1 className="text-2xl font-bold text-blue-400">OpsDesk</h1>
-                <p className="text-gray-400 text-sm">IT Operations Dashboard</p>
+            <header className="bg-gray-800 border-b border-gray-700 px-6 py-4 flex items-center justify-between">
+                <div>
+                    <h1 className="text-2xl font-bold text-blue-400">OpsDesk</h1>
+                    <p className="text-gray-400 text-sm">IT Operations Dashboard</p>
+                </div>
+                <a href="/" className="text-gray-400 hover:text-white text-sm transition-colors">
+                    ← Dashboard
+                </a>
             </header>
             <main className="p-6 max-w-3xl">
 
@@ -107,6 +112,21 @@ export default function IncidentsPage() {
                             <p className="text-gray-600 text-xs mt-2">
                                 {new Date(incident.createdAt).toLocaleString()}
                             </p>
+                            {incident.status === 'open' && (
+                                <button
+                                    onClick={async () => {
+                                        await fetch('/api/incidents', {
+                                            method: 'PATCH',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify({ id: incident.id, status: 'closed' })
+                                        })
+                                        loadIncidents()
+                                    }}
+                                    className="mt-3 text-xs bg-gray-700 hover:bg-red-900 text-gray-300 hover:text-white px-3 py-1 rounded transition-colors"
+                                >
+                                    Close Incident
+                                </button>
+                            )}
                         </div>
                     ))}
                 </div>

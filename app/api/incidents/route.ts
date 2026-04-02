@@ -20,3 +20,12 @@ export async function POST(request: Request) {
   })
   return Response.json(incident)
 }
+
+export async function PATCH(request: Request) {
+  const body = await request.json()
+  const incident = await prisma.incident.update({
+    where: { id: body.id },
+    data: { status: body.status }
+  })
+  return Response.json(incident)
+}
