@@ -15,6 +15,7 @@ export default function IncidentsPage() {
     const [incidents, setIncidents] = useState<Incident[]>([])
     const surgeRan = useRef(false)
     const [showSurvey, setShowSurvey] = useState(false)
+    const [showEnding, setShowEnding] = useState(false)
 
     async function loadIncidents() {
         const res = await fetch('/api/incidents')
@@ -170,6 +171,8 @@ export default function IncidentsPage() {
                                     loadIncidents()
                                     playWhoosh()
                                     setShowSurvey(false)
+                                    await delay(1000)
+                                    setShowEnding(true)
                                 }}
                                 className="text-left bg-gray-700 hover:bg-blue-900 text-gray-300 hover:text-white text-xs px-4 py-3 rounded transition-colors"
                             >
@@ -177,6 +180,23 @@ export default function IncidentsPage() {
                             </button>
                         ))}
                     </div>
+                </div>
+            )}
+            {showEnding && (
+                <div className="fixed bottom-6 right-6 bg-gray-800 border border-gray-600 rounded-lg p-6 max-w-md shadow-2xl">
+                    <p className="text-gray-500 text-xs font-bold uppercase mb-3">Post-Incident Review</p>
+                    <p className="text-white text-sm mb-2">Thank you for your participation. Your incident has been logged and assigned.</p>
+                    <p className="text-gray-400 text-xs mb-1">Estimated resolution: next quarter, pending alignment.</p>
+                    <p className="text-gray-400 text-xs mb-4">This concludes your shift.</p>
+                    <div className="border-t border-gray-700 pt-4">
+                        <p className="text-gray-600 text-xs">The printer is still deciding.</p>
+                    </div>
+                    <button
+                        onClick={() => setShowEnding(false)}
+                        className="mt-4 text-xs text-gray-600 hover:text-gray-400 transition-colors"
+                    >
+                        Acknowledge
+                    </button>
                 </div>
             )}
         </div>
