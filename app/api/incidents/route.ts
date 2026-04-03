@@ -29,3 +29,7 @@ export async function PATCH(request: Request) {
   })
   return Response.json(incident)
 }
+export async function DELETE() {
+  await prisma.incident.deleteMany()
+  return Response.json({ message: 'Board cleared' })
+}
