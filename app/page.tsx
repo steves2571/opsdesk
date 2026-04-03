@@ -1,5 +1,5 @@
 async function getIncidentCount() {
-  const res = await fetch('http://localhost:3000/api/incidents', {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/incidents`, {
     cache: 'no-store'
   })
   const incidents = await res.json()
