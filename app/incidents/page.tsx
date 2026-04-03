@@ -14,6 +14,7 @@ interface Incident {
 export default function IncidentsPage() {
     const [incidents, setIncidents] = useState<Incident[]>([])
     const surgeRan = useRef(false)
+    const [showSurvey, setShowSurvey] = useState(false)
 
     async function loadIncidents() {
         const res = await fetch('/api/incidents')
@@ -60,6 +61,8 @@ export default function IncidentsPage() {
             await fetch('/api/incidents/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ index: 6 }) })
             loadIncidents()
             playBell()
+            await delay(3000)
+            setShowSurvey(true)
         }
 
         surge()
@@ -145,6 +148,37 @@ export default function IncidentsPage() {
                     ))}
                 </div>
             </main>
+            {showSurvey && (
+                <div className="fixed bottom-6 right-6 bg-gray-800 border border-blue-500 rounded-lg p-6 max-w-md shadow-2xl">
+                    <p className="text-blue-400 text-xs font-bold uppercase mb-1">Post-Shift Assessment</p>
+                    <p className="text-white text-sm font-semibold mb-1">Your session has generated 6 incidents.</p>
+                    <p className="text-gray-400 text-xs mb-4">Please select the option that best describes your current situation. This is required.</p>
+                    <div className="flex flex-col gap-2">
+                        {[
+                            { label: "A", text: "I have not received a response to my email. I sent a follow up. I sent a follow up to the follow up. I have been told they are looping someone in. That was Thursday.", priority: "medium", title: "Email chain unresponsive — follow up to follow up submitted" },
+                            { label: "B", text: "The printer was working this morning. I did not touch the printer. Nobody touched the printer. The printer has decided. We respect the printer's decision.", priority: "low", title: "Printer has entered unknown autonomous state — do not approach" },
+                            { label: "C", text: "There is a meeting on my calendar for 7am. I did not accept this meeting. I do not know who scheduled it. It is now 6:45am on a Saturday. I am on the call.", priority: "high", title: "Unauthorized calendar event — attendee present. Attendee had no choice." },
+                        ].map(option => (
+                            <button
+                                key={option.label}
+                                onClick={async () => {
+                                    await fetch('/api/incidents', {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({ title: option.title, description: option.text, priority: option.priority })
+                                    })
+                                    loadIncidents()
+                                    playWhoosh()
+                                    setShowSurvey(false)
+                                }}
+                                className="text-left bg-gray-700 hover:bg-blue-900 text-gray-300 hover:text-white text-xs px-4 py-3 rounded transition-colors"
+                            >
+                                <span className="font-bold text-blue-400 mr-2">{option.label}.</span>{option.text}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
