@@ -5,7 +5,9 @@ const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! })
 const prisma = new PrismaClient({ adapter })
 
 export async function GET() {
-  const incidents = await prisma.incident.findMany()
+  const incidents = await prisma.incident.findMany({
+    orderBy: { createdAt: 'desc' }
+  })
   return Response.json(incidents)
 }
 
