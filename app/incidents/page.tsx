@@ -96,7 +96,7 @@ export default function IncidentsPage() {
                         }}
                         className="text-gray-600 hover:text-red-400 text-xs transition-colors"
                     >
-                        End Shift
+                        START SHIFT
                     </button>
                     <a href="/" className="text-gray-400 hover:text-white text-sm transition-colors">
                         ← Dashboard
