@@ -62,7 +62,7 @@ export default function IncidentsPage() {
     }
 
     useEffect(() => {
-        loadIncidents()
+        fetch('/api/incidents', { method: 'DELETE' }).then(() => loadIncidents())
     }, [])
 
     const priorityColor: Record<string, string> = {
