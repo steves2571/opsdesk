@@ -1,11 +1,15 @@
+import { PrismaClient } from './generated/prisma/client'
+
+const globalForPrisma = global as unknown as { prisma: PrismaClient }
+const prisma = globalForPrisma.prisma || new PrismaClient()
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+
 async function getIncidentCount() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/incidents`, {
-      cache: 'no-store'
+    const count = await prisma.incident.count({
+      where: { status: 'open' }
     })
-    if (!res.ok) return 0
-    const incidents = await res.json()
-    return incidents.filter((i: any) => i.status === 'open').length
+    return count
   } catch {
     return 0
   }
