@@ -28,46 +28,43 @@ export default function IncidentsPage() {
     const playBell = () => new Audio('/sounds/bell.wav').play()
     const playWhoosh = () => new Audio('/sounds/whoosh.wav').play()
 
+    const surge = async () => {
+        const existing = await fetch('/api/incidents').then(r => r.json())
+        if (existing.length > 0) return
+        await delay(1500)
+
+        await fetch('/api/incidents/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ index: 0 }) })
+        loadIncidents()
+        playAlert()
+        await delay(400)
+        await fetch('/api/incidents/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ index: 1 }) })
+        loadIncidents()
+        playAlert()
+        await delay(400)
+        await fetch('/api/incidents/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ index: 2 }) })
+        loadIncidents()
+        playAlert()
+
+        await delay(1500)
+
+        await fetch('/api/incidents/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ index: 3 }) })
+        loadIncidents()
+        playAlert()
+        await delay(400)
+        await fetch('/api/incidents/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ index: 4 }) })
+        loadIncidents()
+        playAlert()
+
+        await delay(2000)
+        await fetch('/api/incidents/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ index: 6 }) })
+        loadIncidents()
+        playBell()
+        await delay(3000)
+        setShowSurvey(true)
+    }
+
     useEffect(() => {
         loadIncidents()
-        if (surgeRan.current) return
-        surgeRan.current = true
-
-        const surge = async () => {
-            await delay(1500)
-
-            await fetch('/api/incidents/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ index: 0 }) })
-            loadIncidents()
-            playAlert()
-            await delay(400)
-            await fetch('/api/incidents/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ index: 1 }) })
-            loadIncidents()
-            playAlert()
-            await delay(400)
-            await fetch('/api/incidents/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ index: 2 }) })
-            loadIncidents()
-            playAlert()
-
-            await delay(1500)
-
-            await fetch('/api/incidents/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ index: 3 }) })
-            loadIncidents()
-            playAlert()
-            await delay(400)
-            await fetch('/api/incidents/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ index: 4 }) })
-            loadIncidents()
-            playAlert()
-
-            await delay(2000)
-            await fetch('/api/incidents/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ index: 6 }) })
-            loadIncidents()
-            playBell()
-            await delay(3000)
-            setShowSurvey(true)
-        }
-
-        surge()
-
     }, [])
 
     const priorityColor: Record<string, string> = {
@@ -108,6 +105,14 @@ export default function IncidentsPage() {
             </header>
             <main className="p-6">
                 <h2 className="text-xl font-semibold text-white mb-4">Active Incidents</h2>
+                {incidents.length === 0 && !surgeRan.current && (
+                    <button
+                        onClick={() => surge()}
+                        className="mt-4 bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold px-6 py-3 rounded transition-colors"
+                    >
+                        Start Shift
+                    </button>
+                )}
                 {incidents.length === 0 && (
                     <p className="text-gray-500 text-sm">Monitoring. No active incidents.</p>
                 )}
