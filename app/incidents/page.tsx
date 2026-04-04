@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 
 interface Incident {
     id: number
@@ -13,7 +13,7 @@ interface Incident {
 
 export default function IncidentsPage() {
     const [incidents, setIncidents] = useState<Incident[]>([])
-    const surgeRan = useRef(false)
+    const [shiftStarted, setShiftStarted] = useState(false)
     const [showSurvey, setShowSurvey] = useState(false)
     const [showEnding, setShowEnding] = useState(false)
 
@@ -30,8 +30,7 @@ export default function IncidentsPage() {
     const playWhoosh = () => new Audio('/sounds/whoosh.wav').play()
 
     const surge = async () => {
-        const existing = await fetch('/api/incidents').then(r => r.json())
-        if (existing.length > 0) return
+        setShiftStarted(true)
         await delay(1500)
 
         await fetch('/api/incidents/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ index: 0 }) })
@@ -87,15 +86,6 @@ export default function IncidentsPage() {
                     <p className="text-gray-400 text-sm">IT Operations Dashboard</p>
                 </div>
                 <div className="flex items-center gap-6">
-                    <button
-                        onClick={async () => {
-                            await fetch('/api/incidents', { method: 'DELETE' })
-                            window.location.reload()
-                        }}
-                        className="text-gray-600 hover:text-red-400 text-xs transition-colors"
-                    >
-                        START SHIFT
-                    </button>
                     <a href="/" className="text-gray-400 hover:text-white text-sm transition-colors">
                         ← Dashboard
                     </a>
@@ -103,7 +93,7 @@ export default function IncidentsPage() {
             </header>
             <main className="p-6">
                 <h2 className="text-xl font-semibold text-white mb-4">Active Incidents</h2>
-                {incidents.length === 0 && !surgeRan.current && (
+                {incidents.length === 0 && !shiftStarted && (
                     <button
                         onClick={() => surge()}
                         className="mt-4 bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold px-6 py-3 rounded transition-colors"
