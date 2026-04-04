@@ -18,6 +18,7 @@ export async function POST(request: Request) {
       title: body.title,
       description: body.description,
       priority: body.priority || 'medium',
+      reporter: body.reporter || 'Unknown',
     }
   })
   return Response.json(incident)
