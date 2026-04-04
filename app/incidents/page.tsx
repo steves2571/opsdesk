@@ -23,8 +23,10 @@ export default function IncidentsPage() {
     const [surveyChoice, setSurveyChoice] = useState<string | null>(null)
     const [printerDropped, setPrinterDropped] = useState(false)
     const [surveyAnswered, setSurveyAnswered] = useState(false)
+    const [penaltyFlash, setPenaltyFlash] = useState(false)
     const scoreRef = useRef(0)
     const totalTicketsRef = useRef(6)
+    const walkupAudio = useRef<HTMLAudioElement | null>(null)
 
     async function loadIncidents(): Promise<Incident[]> {
         const res = await fetch('/api/incidents')
@@ -40,6 +42,16 @@ export default function IncidentsPage() {
     const playAlert = () => new Audio('/sounds/alert.wav').play()
     const playBell = () => new Audio('/sounds/bell.wav').play()
     const playWhoosh = () => new Audio('/sounds/whoosh.wav').play()
+    const playWalkup = () => {
+        walkupAudio.current = new Audio('/sounds/walkup.wav')
+        walkupAudio.current.play()
+    }
+    const stopWalkup = () => {
+        if (walkupAudio.current) {
+            walkupAudio.current.pause()
+            walkupAudio.current.currentTime = 0
+        }
+    }
 
     const surge = async () => {
         setShiftStarted(true)
@@ -84,11 +96,20 @@ export default function IncidentsPage() {
         setScore(newScore)
         const closedCount = shiftLog.length + 1
         setShiftLog(prev => [...prev, { title: incident.title, priority: incident.priority, action: action.label, points: earned }])
-        playWhoosh()
+
+        if (isPenalty) {
+            playAlert()
+            setPenaltyFlash(true)
+            setTimeout(() => setPenaltyFlash(false), 1000)
+        } else {
+            playWhoosh()
+        }
         loadIncidents()
 
         if (closedCount === 6 && !surveyAnswered) {
             await delay(1500)
+            playWalkup()
+            await delay(800)
             setShowSurvey(true)
             return
         }
@@ -141,7 +162,7 @@ export default function IncidentsPage() {
                     <p className="text-gray-400 text-sm">IT Operations Dashboard</p>
                 </div>
                 <div className="flex items-center gap-4">
-                    <span className="text-yellow-400 font-mono text-sm font-bold">Score: {score}</span>
+                    <span className={`font-mono text-sm font-bold transition-colors duration-300 ${penaltyFlash ? 'text-red-500' : 'text-yellow-400'}`}>Score: {score}</span>
                     <a href="/" className="text-gray-400 hover:text-white text-sm transition-colors">
                         ← Dashboard
                     </a>
@@ -212,6 +233,7 @@ export default function IncidentsPage() {
                     <div className="flex flex-col gap-2">
                         <button
                             onClick={async () => {
+                                stopWalkup()
                                 await fetch('/api/incidents', {
                                     method: 'POST',
                                     headers: { 'Content-Type': 'application/json' },
@@ -234,6 +256,7 @@ export default function IncidentsPage() {
                         </button>
                         <button
                             onClick={async () => {
+                                stopWalkup()
                                 await fetch('/api/incidents', {
                                     method: 'POST',
                                     headers: { 'Content-Type': 'application/json' },
