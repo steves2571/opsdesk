@@ -20,9 +20,10 @@ export default function IncidentsPage() {
     async function loadIncidents() {
         const res = await fetch('/api/incidents')
         const data = await res.json()
-        setIncidents(data)
+        setIncidents([...data].sort((a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        ))
     }
-
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
     const playAlert = () => new Audio('/sounds/alert.wav').play()
     const playBell = () => new Audio('/sounds/bell.wav').play()
@@ -44,9 +45,7 @@ export default function IncidentsPage() {
         await fetch('/api/incidents/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ index: 2 }) })
         loadIncidents()
         playAlert()
-
         await delay(1500)
-
         await fetch('/api/incidents/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ index: 3 }) })
         loadIncidents()
         playAlert()
@@ -54,7 +53,6 @@ export default function IncidentsPage() {
         await fetch('/api/incidents/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ index: 4 }) })
         loadIncidents()
         playAlert()
-
         await delay(2000)
         await fetch('/api/incidents/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ index: 6 }) })
         loadIncidents()
