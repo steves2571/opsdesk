@@ -36,11 +36,11 @@ export default async function Home() {
               <p className="text-red-400 text-xs mt-1 animate-pulse">● Active incidents detected</p>
             )}
           </a>
-          <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+          <a href="/runbook" className="bg-gray-800 rounded-lg p-6 border border-gray-700 hover:border-blue-500 transition-colors">
             <h2 className="text-xl font-semibold text-blue-400 mb-2">Runbook Library</h2>
             <p className="text-gray-400 text-sm">Operational procedures and guides</p>
-            <p className="text-3xl font-bold text-white mt-4">0 Docs</p>
-          </div>
+            <p className="text-3xl font-bold text-white mt-4">View Docs</p>
+          </a>
           <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
             <h2 className="text-xl font-semibold text-green-400 mb-2">System Health</h2>
             <p className="text-gray-400 text-sm">Live service status board</p>
