@@ -48,11 +48,11 @@ export default async function Home() {
               {openCount > 3 ? 'Degraded' : 'All Clear'}
             </p>
           </div>
-          <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+          <a href="/metrics" className="bg-gray-800 rounded-lg p-6 border border-gray-700 hover:border-blue-500 transition-colors">
             <h2 className="text-xl font-semibold text-blue-400 mb-2">Metrics</h2>
-            <p className="text-gray-400 text-sm">Incident trends and response times</p>
-            <p className="text-3xl font-bold text-white mt-4">Coming Soon</p>
-          </div>
+            <p className="text-gray-400 text-sm">Career performance and shift history</p>
+            <p className="text-3xl font-bold text-white mt-4">View Stats</p>
+          </a>
         </div>
       </main>
     </div>
