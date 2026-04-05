@@ -1,36 +1,79 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# OpsDesk
 
-## Getting Started
+A NOC simulator for people who've been there.
 
-First, run the development server:
+**Live:** [opsdesk-nine.vercel.app](https://opsdesk-nine.vercel.app)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## What It Is
+
+OpsDesk is an interactive IT operations simulator. Incidents arrive. You triage them. A score tracks your decisions. Someone walks up to your desk about the printer. The printer has opinions.
+
+Built as a portfolio project by a senior IT professional with 30+ years in enterprise support, NOC operations, and service desk management. The humor is accurate. The tickets are real. The printer is still down.
+
+## Tech Stack
+
+- **Next.js** — App Router, file-based routing, API routes
+- **TypeScript** — End to end type safety
+- **React** — Hooks, refs, state management, conditional rendering
+- **Prisma ORM** — Schema design, PostgreSQL adapter, CRUD operations
+- **Neon PostgreSQL** — Serverless production database
+- **Tailwind CSS** — Utility-first styling, custom animations
+- **Vercel** — CI/CD deployment from GitHub
+
+## Features
+
+- **Incident Surge** — Choreographed ticket sequence with prioritized sound design
+- **Scoring System** — Base points with priority multipliers, correct-answer bonuses, and penalties
+- **Walk-Up Event** — Mid-shift interruption with audio and branching choices
+- **Runbook Library** — NOC Quick Reference Guide and auto-generated shift performance reviews
+- **Pay Stub System** — 7-tier rewards based on shift score
+- **Metrics Dashboard** — Career stats persisted across sessions via localStorage
+- **Reporter Names** — Named cast with numbered duplicates for repeat submitters
+- **Sound Design** — Alert thuds, resolution whoosh, prayer bowl, throat clear walk-up
+
+## Architecture
+
+```
+app/
+├── page.tsx              # Dashboard — server component, live incident count
+├── incidents/page.tsx    # Game board — client component, full shift logic
+├── runbook/page.tsx      # Shift log, NOC guide, pay stub
+├── metrics/page.tsx      # Career stats from localStorage
+├── api/
+│   └── incidents/
+│       ├── route.ts      # CRUD — GET, POST, PATCH, DELETE
+│       └── generate/route.ts  # Incident pool generator
+lib/
+├── incidents.ts          # Incident pool with reporter names
+├── reviewResponses.ts    # Scoring bonuses, review text, summary generator
+prisma/
+└── schema.prisma         # Incident model — PostgreSQL via Neon
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Local Development
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+git clone https://github.com/steves2571/opsdesk.git
+cd opsdesk
+npm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Create `.env` with your Neon database URL:
 
-## Learn More
+```
+DATABASE_URL=postgresql://...
+```
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npx prisma generate
+npx prisma db push
+npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Open `localhost:3000`. Start your shift.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## The Printer
 
-## Deploy on Vercel
+The printer is on Floor 3. The toner light is amber. It has been amber. A technician was dispatched in Q2. The technician has not returned. His badge still works.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Do not approach the printer.
