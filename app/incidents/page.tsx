@@ -212,7 +212,7 @@ export default function IncidentsPage() {
                         {shiftStarted && <span style={{ animation: 'blink 1s infinite' }}>_</span>}
                     </div>
                 )}
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {incidents.filter(incident => incident.status === 'open').map(incident => (
                         <div
                             key={incident.id}
