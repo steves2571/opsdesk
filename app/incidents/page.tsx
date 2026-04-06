@@ -320,8 +320,8 @@ export default function IncidentsPage() {
                         <p className="text-gray-400 text-xs mb-2">All incidents resolved. Your shift log has been filed.</p>
                         <p className="text-gray-500 text-xs mb-6">Review your performance in the Runbook Library. Then clock out. Or don't. The building is always open. The lights do not turn off.</p>
                         <div className="flex flex-col gap-2">
-                            <button onClick={() => window.location.href = "/runbook"} className="text-sm text-blue-400 hover:text-blue-300 transition-colors">View Shift Log</button>
-                            <button onClick={() => window.location.href = "/"} className="text-xs text-gray-600 hover:text-gray-400 transition-colors">Clock Out</button>
+                            <button onClick={async () => { await fetch('/api/incidents', { method: 'DELETE' }); window.location.href = "/runbook"; }} className="text-sm text-blue-400 hover:text-blue-300 transition-colors">View Shift Log</button>
+                            <button onClick={async () => { await fetch('/api/incidents', { method: 'DELETE' }); window.location.href = "/"; }} className="text-xs text-gray-600 hover:text-gray-400 transition-colors">Clock Out</button>
                         </div>
                     </div>
                 </div>
